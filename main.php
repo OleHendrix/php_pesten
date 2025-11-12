@@ -76,13 +76,15 @@ class Player {
         $this->hand[] = $card;
     }
 
-    public function checkCardsRemaining(): void {
-      if ($this->getCardCount() == 1) {
+    public function checkCardsRemaining(): int {
+      $cardCount = $this->getCardCount();
+      if ($cardCount == 1) {
         fwrite(STDOUT, "{$this->name} has 1 card remaining\n");
       }
-      else if ($this->getCardCount() == 0) {
+      else if ($cardCount == 0) {
         fwrite(STDOUT, "{$this->name} has no cards remaining\n");
       }
+      return $cardCount;
     }
     
     // NEW: Remove card from hand
@@ -216,7 +218,10 @@ class Game {
                 $card = $player->playCard();
                 $this->playDeck->addCard($card);
                 fwrite(STDOUT, "{$player->getName()} plays {$topCard->getSuit()}{$topCard->getRank()}\n");
-                $player->checkCardsRemaining();
+                if ($player->checkCardsRemaining() == 0) {
+                  fwrite(STDOUT, "{$player->getName()} has won\n");
+                  return;
+                }
             }
             else {
                 $card = $this->restDeck->drawCard();
@@ -231,8 +236,7 @@ class Game {
 }
 function main() {
   $game = new Game(["Oleg", "John", "Jane", "Jim"]);
-
-
+  $game->playGame();
 }
 
 main();
