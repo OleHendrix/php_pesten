@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 require_once 'Card.php';
 
 class RestDeck {
@@ -24,19 +27,8 @@ class RestDeck {
         }
         return array_shift($this->cards);
     }
-
-    public function getTopCard(): ?Card {
-        if ($this->isEmpty()) {
-            return null;
-        }
-        return $this->cards[0];
-    }
     
     public function isEmpty(): bool {
         return count($this->cards) === 0;
-    }
-    
-    public function getCardCount(): int {
-        return count($this->cards);
     }
 }

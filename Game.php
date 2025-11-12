@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 require_once 'RestDeck.php';
 require_once 'PlayDeck.php';
 require_once 'Player.php';
@@ -9,17 +12,17 @@ class Game {
     private array $players = []; 
     private const CARDS_PER_PLAYER = 7;
 
-    public function __construct(array $players) {
-        foreach ($players as $playerName) {
-            $this->players[] = new Player($playerName);
-        }
-        fwrite(STDOUT, "Starting game with " . implode(', ', $players) . "\n");
+    public function __construct(RestDeck $restDeck, PlayDeck $playDeck, array $players) {
+        $this->restDeck = $restDeck;
+        $this->playDeck = $playDeck;
+        $this->players = $players;
+        
+        $playerNames = array_map(fn($p) => $p->getName(), $players);
+        fwrite(STDOUT, "Starting game with " . implode(', ', $playerNames) . "\n");
 
-        $this->restDeck = new RestDeck();
         $this->restDeck->shuffle();
         $this->dealCards();
         $this->printHands();
-        $this->playDeck = new PlayDeck($this->restDeck->drawCard());
         $this->printTopCard();
     }
 
@@ -48,26 +51,12 @@ class Game {
     }
 
     public function playGame(): void {
-      while (true) {
-        foreach ($this->players as $player) {
-            $topCard = $this->playDeck->getTopCard();
-            $card = $player->findAndPlayCard($topCard);
-            if ($card) {
-                $this->playDeck->addCard($card);
-                fwrite(STDOUT, "{$player->getName()} plays {$card->getSuit()}{$card->getRank()}\n");
-                if ($player->checkCardsRemaining() == 0) {
-                  fwrite(STDOUT, "{$player->getName()} has won\n");
-                  return;
-                }
-            }
-            else {
-                $card = $this->restDeck->drawCard();
-                if ($card) {
-                    $player->takeCard($card);
-                    fwrite(STDOUT, "{$player->getName()} does not have a suitable card, taking from deck {$card->getSuit()}{$card->getRank()} \n", );
+        while (true) {
+            foreach ($this->players as $player) {
+                if ($player->takeTurn($this->playDeck, $this->restDeck)) {
+                    return; // Player has won
                 }
             }
         }
-      }
     }
 }

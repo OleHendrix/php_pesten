@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+require_once 'Card.php';
+
 class PlayDeck {
     private array $cards = [];
     

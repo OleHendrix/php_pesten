@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 class Card {
     private string $rank;
     private string $suit;
