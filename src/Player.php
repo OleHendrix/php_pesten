@@ -26,7 +26,7 @@ class Player {
             fwrite(STDOUT, "{$this->name} plays {$card->toString()}\n");
             
             if ($this->checkCardsRemaining() == 0) {
-                fwrite(STDOUT, "{$this->name} has won\n");
+                fwrite(STDOUT, "{$this->name} has won.\n");
                 return ['playDeck' => $playDeck, 'restDeck' => $restDeck, 'won' => true];
             }
         } else {
@@ -60,7 +60,7 @@ class Player {
     public function checkCardsRemaining(): int {
         $cardCount = count($this->hand);
         if ($cardCount == 1) {
-          fwrite(STDOUT, "{$this->name} has 1 card remaining\n");
+          fwrite(STDOUT, "{$this->name} has 1 card remaining!\n");
         }
         return $cardCount;
     }
