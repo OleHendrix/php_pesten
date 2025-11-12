@@ -17,27 +17,28 @@ class Player {
         fwrite(STDOUT, "{$this->name} has been dealt: " . implode(', ', $cards) . PHP_EOL);
     }
 
-    public function takeTurn(PlayDeck $playDeck, RestDeck $restDeck): bool {
-        $topCard = $playDeck->getTopCard();
+    public function takeTurn(array $playDeck, array $restDeck): array {
+        $topCard = getTopCard($playDeck);
         $card = $this->findAndPlayCard($topCard);
         
         if ($card) {
-            $playDeck->addCard($card);
+            $playDeck = addCardToPlayDeck($playDeck, $card);
             fwrite(STDOUT, "{$this->name} plays {$card->getSuit()}{$card->getRank()}\n");
             
             if ($this->checkCardsRemaining() == 0) {
                 fwrite(STDOUT, "{$this->name} has won\n");
-                return true;
+                return ['playDeck' => $playDeck, 'restDeck' => $restDeck, 'won' => true];
             }
         } else {
-            $card = $restDeck->drawCard();
-            if ($card) {
-                $this->takeCard($card);
-                fwrite(STDOUT, "{$this->name} does not have a suitable card, taking from deck {$card->getSuit()}{$card->getRank()} \n");
+            $result = drawCard($restDeck);
+            if ($result['card']) {
+                $this->takeCard($result['card']);
+                $restDeck = $result['deck'];
+                fwrite(STDOUT, "{$this->name} does not have a suitable card, taking from deck {$result['card']->getSuit()}{$result['card']->getRank()} \n");
             }
         }
         
-        return false;
+        return ['playDeck' => $playDeck, 'restDeck' => $restDeck, 'won' => false];
     }
     
     public function findAndPlayCard(Card $topCard): ?Card {
