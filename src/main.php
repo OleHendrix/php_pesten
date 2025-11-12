@@ -5,12 +5,8 @@ declare(strict_types=1);
 require_once 'game_functions.php';
 
 function main() {
-    $players = [
-        new Player("Elwin"),
-        new Player("Sasha"),
-        new Player("Jane"),
-        new Player("Ole")
-    ];
+    $playerNames = ["Elwin", "Sasha", "Mathijs", "Ole"];
+    $players = array_map(fn($name) => new Player($name), $playerNames);
     
     printPlayerNames($players);
     
