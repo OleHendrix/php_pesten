@@ -29,7 +29,7 @@ class Card {
 
 class Player {
     private string $name;
-    private array $hand = [];  // NEW: player's cards
+    private array $hand = [];  
     private int $index_to_play = 0;
     
     public function __construct(string $name) {
@@ -41,12 +41,10 @@ class Player {
         fwrite(STDOUT, "{$this->name} has been dealt: " . implode(', ', $cards) . PHP_EOL);
     }
     
-    // NEW: Add a card to player's hand
     public function addCard(Card $card): void {
         $this->hand[] = $card;
     }
     
-    // NEW: Find and play a card that matches
     public function findPlayableCard(Card $topCard): ?Card {
         foreach ($this->hand as $index => $card) {
             if ($card->matchesCard($topCard)) {
@@ -81,30 +79,23 @@ class Player {
       if ($cardCount == 1) {
         fwrite(STDOUT, "{$this->name} has 1 card remaining\n");
       }
-      else if ($cardCount == 0) {
-        fwrite(STDOUT, "{$this->name} has no cards remaining\n");
-      }
       return $cardCount;
     }
     
-    // NEW: Remove card from hand
     private function removeCardAtIndex(int $index): Card {
         $card = $this->hand[$index];
         array_splice($this->hand, $index, 1);
         return $card;
     }
     
-    // NEW: Check if player has cards
     public function hasCards(): bool {
         return count($this->hand) > 0;
     }
     
-    // NEW: Get card count
     public function getCardCount(): int {
         return count($this->hand);
     }
     
-    // NEW: Get player name
     public function getName(): string {
         return $this->name;
     }
@@ -127,7 +118,6 @@ class RestDeck {
         shuffle($this->cards);
     }
 
-    // NEW: Draw a card from the top
     public function drawCard(): ?Card {
         if ($this->isEmpty()) {
             return null;
@@ -139,12 +129,10 @@ class RestDeck {
         return $this->cards[0];
     }
     
-    // NEW: Check if deck is empty
     public function isEmpty(): bool {
         return count($this->cards) === 0;
     }
     
-    // NEW: Get number of cards left
     public function getCardCount(): int {
         return count($this->cards);
     }
@@ -227,13 +215,14 @@ class Game {
                 $card = $this->restDeck->drawCard();
                 if ($card) {
                     $player->takeCard($card);
-                    fwrite(STDOUT, "{$player->getName()} does not have a suitable card to play\n");
+                    fwrite(STDOUT, "{$player->getName()} does not have a suitable card, taking from deck {$card->getSuit()}{$card->getRank()} \n", );
                 }
             }
         }
       }
     }
 }
+
 function main() {
   $game = new Game(["Oleg", "John", "Jane", "Jim"]);
   $game->playGame();
