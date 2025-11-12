@@ -14,12 +14,11 @@ function main() {
     ];
     
     // Print player names
-    $playerNames = array_map(fn($p) => $p->getName(), $players);
-    fwrite(STDOUT, "Starting game with " . implode(', ', $playerNames) . "\n");
+    printPlayerNames($players);
     
     // Create and shuffle rest deck (functional)
     $restDeck = createRestDeck();
-    $restDeck = shuffleDeck($restDeck);
+    shuffle($restDeck);
     
     // Deal cards to players (functional approach)
     $restDeck = dealCards($players, $restDeck);
@@ -36,7 +35,7 @@ function main() {
     printTopCard($playDeck);
     
     // Play the game
-    playGame($players, $playDeck, $restDeck);
+    startGame($players, $playDeck, $restDeck);
 }
 
 main();

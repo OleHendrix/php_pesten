@@ -5,24 +5,24 @@ declare(strict_types=1);
 require_once 'Card.php';
 require_once 'Player.php';
 
+function printPlayerNames(array $players): void {
+    $playerNames = array_map(fn($p) => $p->getName(), $players);
+    fwrite(STDOUT, "Starting game with " . implode(', ', $playerNames) . "\n");
+}
+
 // RestDeck functions
 function createRestDeck(): array {
-    $cards = [];
+    $restDeck = [];
     $ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     $suits = ['♥', '♦', '♣', '♠'];
     
     foreach ($ranks as $rank) {
         foreach ($suits as $suit) {
-            $cards[] = new Card($rank, $suit);
+            $restDeck[] = new Card($rank, $suit);
         }
     }
     
-    return $cards;
-}
-
-function shuffleDeck(array $deck): array {
-    shuffle($deck);
-    return $deck;
+    return $restDeck;
 }
 
 function drawCard(array $deck): array {
@@ -72,11 +72,11 @@ function printHands(array $players): void {
 function printTopCard(array $playDeck): void {
     $topCard = getTopCard($playDeck);
     if ($topCard) {
-        fwrite(STDOUT, "Top card is: {$topCard->getSuit()}{$topCard->getRank()}\n");
+        fwrite(STDOUT, "Top card is: {$topCard->toString()}\n");
     }
 }
 
-function playGame(array $players, array $playDeck, array $restDeck): void {
+function startGame(array $players, array $playDeck, array $restDeck): void {
     while (true) {
         foreach ($players as $player) {
             $result = $player->takeTurn($playDeck, $restDeck);

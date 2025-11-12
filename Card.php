@@ -11,20 +11,20 @@ class Card {
         $this->suit = $suit;
     }
     
-    public function getRank(): string {
-        return $this->rank;
+    // public function getRank(): string {
+    //     return $this->rank;
+    // }
+    
+    // public function getSuit(): string {
+    //     return $this->suit;
+    // }
+    
+    public function matchesCard(Card $topCard): bool {
+        return $this->rank === $topCard->rank || 
+               $this->suit === $topCard->suit;
     }
     
-    public function getSuit(): string {
-        return $this->suit;
-    }
-    
-    public function matchesCard(Card $otherCard): bool {
-        return $this->rank === $otherCard->getRank() || 
-               $this->suit === $otherCard->getSuit();
-    }
-    
-    public function __toString(): string {
-        return "{$this->rank} of {$this->suit}";
+    public function toString(): string {
+        return "{$this->suit}{$this->rank}";
     }
 }

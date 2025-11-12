@@ -13,8 +13,8 @@ class Player {
     }
 
     public function printHand(): void {
-        $cards = array_map(fn($card) => "{$card->getSuit()}{$card->getRank()}", $this->hand);
-        fwrite(STDOUT, "{$this->name} has been dealt: " . implode(', ', $cards) . PHP_EOL);
+        $cards = array_map(fn($card) => $card->toString(), $this->hand);
+        fwrite(STDOUT, "{$this->name} has been dealt: " . implode(', ', $cards) . "\n");
     }
 
     public function takeTurn(array $playDeck, array $restDeck): array {
@@ -23,7 +23,7 @@ class Player {
         
         if ($card) {
             $playDeck = addCardToPlayDeck($playDeck, $card);
-            fwrite(STDOUT, "{$this->name} plays {$card->getSuit()}{$card->getRank()}\n");
+            fwrite(STDOUT, "{$this->name} plays {$card->toString()}\n");
             
             if ($this->checkCardsRemaining() == 0) {
                 fwrite(STDOUT, "{$this->name} has won\n");
@@ -34,7 +34,7 @@ class Player {
             if ($result['card']) {
                 $this->takeCard($result['card']);
                 $restDeck = $result['deck'];
-                fwrite(STDOUT, "{$this->name} does not have a suitable card, taking from deck {$result['card']->getSuit()}{$result['card']->getRank()} \n");
+                fwrite(STDOUT, "{$this->name} does not have a suitable card, taking from deck {$result['card']->toString()} \n");
             }
         }
         
